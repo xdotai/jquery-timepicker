@@ -825,6 +825,14 @@
 					self.focus();
 				}
 			} else {
+				// for some reason, hitting Return again will trigger the nearest button too
+				if (e.keyCode === 13) {
+					// apply formatting in case input has changed
+					_formatValue.call(self.get(0), {
+						type: "change"
+					});
+					return false;
+				}
 				return true;
 			}
 		}
@@ -833,6 +841,9 @@
 
 			case 13: // return
 				if (_selectValue(self)) {
+					_formatValue.call(self.get(0), {
+						type: "change"
+					});
 					methods.hide.apply(this);
 				}
 
@@ -1010,13 +1021,15 @@
 		return duration.join(' ');
 	}
 
-	function _int2time(seconds, settings)
-	{
-		if (seconds === null) {
+	function _int2time(timeInt, settings) {
+		if (typeof timeInt != "number") {
 			return null;
 		}
 
-		var time = new Date(_baseDate.valueOf() + (seconds*1000));
+		var seconds = parseInt(timeInt % 60),
+				minutes = parseInt(timeInt / 60 % 60),
+				hours = parseInt(timeInt / (60 * 60) % 24);
+		var time = new Date(1970, 0, 2, hours, minutes, seconds, 0);
 
 		if (isNaN(time.getTime())) {
 			return null;
@@ -1026,59 +1039,59 @@
 			return settings.timeFormat(time);
 		}
 
-		var output = '';
+		var output = "";
 		var hour, code;
-		for (var i=0; i<settings.timeFormat.length; i++) {
 
+		for (var i = 0; i < settings.timeFormat.length; i++) {
 			code = settings.timeFormat.charAt(i);
+
 			switch (code) {
-
-				case 'a':
-					output += (time.getHours() > 11) ? _lang.pm : _lang.am;
+				case "a":
+					output += time.getHours() > 11 ? _lang.pm : _lang.am;
 					break;
 
-				case 'A':
-					output += (time.getHours() > 11) ? _lang.PM : _lang.AM;
+				case "A":
+					output += time.getHours() > 11 ? _lang.PM : _lang.AM;
 					break;
 
-				case 'g':
+				case "g":
 					hour = time.getHours() % 12;
-					output += (hour === 0) ? '12' : hour;
+					output += hour === 0 ? "12" : hour;
 					break;
 
-				case 'G':
+				case "G":
 					hour = time.getHours();
-					if (seconds === _ONE_DAY) hour = 24;
+					if (timeInt === ONE_DAY) hour = settings.show2400 ? 24 : 0;
 					output += hour;
 					break;
 
-				case 'h':
+				case "h":
 					hour = time.getHours() % 12;
 
 					if (hour !== 0 && hour < 10) {
-						hour = '0'+hour;
+						hour = "0" + hour;
 					}
 
-					output += (hour === 0) ? '12' : hour;
+					output += hour === 0 ? "12" : hour;
 					break;
 
-				case 'H':
+				case "H":
 					hour = time.getHours();
-					if (seconds === _ONE_DAY) hour = settings.show2400 ? 24 : 0;
-					output += (hour > 9) ? hour : '0'+hour;
+					if (timeInt === ONE_DAY) hour = settings.show2400 ? 24 : 0;
+					output += hour > 9 ? hour : "0" + hour;
 					break;
 
-				case 'i':
+				case "i":
 					var minutes = time.getMinutes();
-					output += (minutes > 9) ? minutes : '0'+minutes;
+					output += minutes > 9 ? minutes : "0" + minutes;
 					break;
 
-				case 's':
+				case "s":
 					seconds = time.getSeconds();
-					output += (seconds > 9) ? seconds : '0'+seconds;
+					output += seconds > 9 ? seconds : "0" + seconds;
 					break;
 
-				case '\\':
+				case "\\":
 					// escape character; add the next character and skip ahead
 					i++;
 					output += settings.timeFormat.charAt(i);
