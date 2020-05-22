@@ -565,7 +565,7 @@
 			appendTo.append(wrapped_list);
 			_setSelected(self, list);
 
-			list.on('mousedown touchstart', 'li', function(e) {
+			list.on('mousedown click', 'li', function(e) {
 
 				// hack: temporarily disable the focus handler
 				// to deal with the fact that IE fires 'focus'
@@ -587,8 +587,8 @@
 				if (_selectValue(self)) {
 					self.trigger('hideTimepicker');
 
-					list.on('mouseup.timepicker touchend.timepicker', 'li', function(e) {
-						list.off('mouseup.timepicker touchend.timepicker');
+					list.on('mouseup.timepicker click.timepicker', 'li', function(e) {
+						list.off('mouseup.timepicker click.timepicker');
 						wrapped_list.hide();
 					});
 				}
@@ -640,13 +640,20 @@
 	// event handler to decide whether to close timepicker
 	function _closeHandler(e)
 	{
-		var target = $(e.target);
-		var input = target.closest('.ui-timepicker-input');
-		if (input.length === 0 && target.closest('.ui-timepicker-wrapper').length === 0) {
-			methods.hide();
-			$(document).unbind('.ui-timepicker');
-			$(window).unbind('.ui-timepicker');
+		if (e.target == window) {
+			// mobile Chrome fires focus events against window for some reason
+			return;
 		}
+		var target = $(e.target);
+		
+		if (target.closest(".ui-timepicker-input").length || target.closest(".ui-timepicker-wrapper").length) {
+			// active timepicker was focused. ignore
+			return;
+		}
+		
+		methods.hide();
+		$(document).unbind(".ui-timepicker");
+		$(window).unbind(".ui-timepicker");
 	}
 
 	function _hideKeyboard(self)
