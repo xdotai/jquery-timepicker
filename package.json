@@ -1,5 +1,5 @@
 {
-	"name": "timepicker",
+	"name": "@xdotai/timepicker",
 	"version": "1.8.11",
 	"title": "jquery-timepicker",
 	"author": {
@@ -18,7 +18,7 @@
 		"grunt-contrib-cssmin": "~0.4.1"
 	},
 	"main": "jquery.timepicker.min.js",
-	"description": "A jQuery timepicker plugin inspired by Google Calendar. It supports both mouse and keyboard navigation.",
+	"description": "A jQuery timepicker plugin inspired by Google Calendar, forked by xdotai. It supports both mouse and keyboard navigation.",
 	"keywords": [ "timepicker", "time", "picker", "ui", "google calendar" ],
 	"homepage": "http://jonthornton.github.com/jquery-timepicker/",
 	"scripts": {
@@ -26,7 +26,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/jonthornton/jquery-timepicker.git"
+		"url": "https://github.com/xdotai/jquery-timepicker"
 	},
 	"bugs": {
 		"url": "https://github.com/jonthornton/jquery-timepicker/issues"
