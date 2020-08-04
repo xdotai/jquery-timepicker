@@ -10,11 +10,11 @@ defaults: &defaults
     - *base-executor-docker
 
 
-slack-notify: &slack-notify
-  slack/status:
-    fail_only: true
-    only_for_branches: "master"
-    webhook: "${SLACK_WEBHOOK}"
+# slack-notify: &slack-notify
+#   slack/status:
+#     fail_only: true
+#     only_for_branches: "master"
+#     webhook: "${SLACK_WEBHOOK}"
 
 version: 2.1
 orbs:
@@ -28,6 +28,7 @@ jobs:
       - checkout
       - run: |
           npm ci
+          npm install grunt
       - run:
           grunt lint
       - persist_to_workspace:
