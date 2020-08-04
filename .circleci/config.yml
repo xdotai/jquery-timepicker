@@ -28,7 +28,7 @@ jobs:
       - checkout
       - run: |
           npm ci
-      - run:
+      - run: |
           mkdir -p /tmp/artifacts
 
           # we added to circle @ version 1.8.11 so we're adding 11 to build number
